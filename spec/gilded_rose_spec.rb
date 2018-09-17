@@ -182,5 +182,53 @@ describe "#update_quality" do
 
     it { expect(normal_item).to have_attributes(sell_in: 4, quality: 9) }
     it { expect(aged_brie).to have_attributes(sell_in: 2, quality: 11) }
- end
+  end
+
+  context "Conjured" do
+    let(:conjuried) { Item.new('Conjured', 5, 10) }
+    let(:items) { [conjuried] }
+
+    it "before sell date" do
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: 4, quality: 8)
+    end
+
+    it "before sell date at zero quality" do
+      conjuried.quality = 0
+
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: 4, quality: 0)
+    end
+
+    it "on sell date" do
+      conjuried.sell_in = 0
+
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: -1, quality: 6)
+    end
+
+    it "on sell date at zero quality" do
+      conjuried.sell_in = 0
+      conjuried.quality = 0
+
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: -1, quality: 0)
+    end
+
+    it "after sell date" do
+      conjuried.sell_in = -10
+      conjuried.quality = 10
+
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: -11, quality: 6)
+    end
+
+    it "after sell date at zero quality" do
+      conjuried.sell_in = -10
+      conjuried.quality = 0
+
+      update_quality(items)
+      expect(conjuried).to have_attributes(sell_in: -11, quality: 0)
+    end
+  end
 end

@@ -42,6 +42,30 @@ describe "#update_quality" do
     end
   end
 
+  context "Sulfuras" do
+    let(:sulfuras) { Item.new('Sulfuras, Hand of Ragnaros', 5, 80) }
+    let(:items) { [sulfuras] }
+
+    it "before sell date" do
+      update_quality(items)
+      expect(sulfuras).to have_attributes(sell_in: 5, quality: 80)
+    end
+
+    it "on sell date" do
+      sulfuras.sell_in = 0
+
+      update_quality(items)
+      expect(sulfuras).to have_attributes(sell_in: 0, quality: 80)
+    end
+
+    it "after sell date" do
+      sulfuras.sell_in = -10
+
+      update_quality(items)
+      expect(sulfuras).to have_attributes(sell_in: -10, quality: 80)
+    end
+  end
+
   # context "with a single item" do
   #   let(:initial_sell_in) { 5 }
   #   let(:initial_quality) { 10 }

@@ -1,24 +1,11 @@
 class BackstageUpdater
   def self.update(item)
-    if item.quality < 50
-      item.quality += 1
-      if item.sell_in < 11
-        if item.quality < 50
-          item.quality += 1
-        end
-      end
-      if item.sell_in < 6
-        if item.quality < 50
-          item.quality += 1
-        end
-      end
-    end
-
     item.sell_in -= 1
-
-    if item.sell_in < 0
-      item.quality = item.quality - item.quality
-    end
+    return item.quality = 0 if item.sell_in < 0
+    return if item.quality >= 50
+    return item.quality += 3 if item.sell_in < 5
+    return item.quality += 2 if item.sell_in < 10
+    item.quality += 1
   end
 end
 

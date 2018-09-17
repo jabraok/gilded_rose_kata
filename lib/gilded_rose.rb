@@ -60,22 +60,6 @@ class SulfurasUpdater
   end
 end
 
-def update_backstage(item)
-  BackstageUpdater.update(item)
-end
-
-def update_aged_brie(item)
-  AgedBrieUpdater.update(item)
-end
-
-def update_normal_item(item)
-  NormalUpdater.update(item)
-end
-
-def update_sulfuras(item)
-  SulfurasUpdater.update(item)
-end
-
 ITEM_UPDATERS = {
   'Sulfuras, Hand of Ragnaros': SulfurasUpdater,
   'Backstage passes to a TAFKAL80ETC concert': BackstageUpdater,

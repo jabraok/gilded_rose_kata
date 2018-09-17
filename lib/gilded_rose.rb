@@ -33,10 +33,20 @@ class SulfurasUpdater
   end
 end
 
+class ConjuredUpdater
+  def self.update(item)
+    item.sell_in -= 1
+    return if item.quality <= 0
+    return item.quality -= 4 if item.sell_in <= 0
+    item.quality -= 2
+  end
+end
+
 ITEM_UPDATERS = {
   'Sulfuras, Hand of Ragnaros': SulfurasUpdater,
   'Backstage passes to a TAFKAL80ETC concert': BackstageUpdater,
-  'Aged Brie': AgedBrieUpdater
+  'Aged Brie': AgedBrieUpdater,
+  'Conjured': ConjuredUpdater
 }.freeze
 
 def update_quality(items)

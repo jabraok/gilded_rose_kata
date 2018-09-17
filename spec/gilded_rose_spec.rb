@@ -66,6 +66,82 @@ describe "#update_quality" do
     end
   end
 
+  context "Backstage Pass" do
+    let(:backstage_pass) { Item.new('Backstage passes to a TAFKAL80ETC concert', 11, 10) }
+    let(:items) { [backstage_pass] }
+
+    it "long before sell date" do
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 10, quality: 11)
+    end
+
+    it "long before sell date at max quality" do
+      backstage_pass.quality = 50
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 10, quality: 50)
+    end
+
+    it "medium close to sell date upper bound" do
+      backstage_pass.sell_in = 10
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 9, quality: 12)
+    end
+
+    it "medium close to sell date upper bound at max quality" do
+      backstage_pass.sell_in = 10
+      backstage_pass.quality = 50
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 9, quality: 50)
+    end
+
+    it "medium close to sell date lower bound" do
+      backstage_pass.sell_in = 6
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 5, quality: 12)
+    end
+
+    it "medium close to sell date lower bound at max quality" do
+      backstage_pass.sell_in = 6
+      backstage_pass.quality = 50
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 5, quality: 50)
+    end
+
+    it "very close to sell date upper bound" do
+      backstage_pass.sell_in = 5
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 4, quality: 13)
+    end
+
+    it "very close to sell date upper bound at max quality" do
+      backstage_pass.sell_in = 5
+      backstage_pass.quality = 50
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: 4, quality: 50)
+    end
+
+    it "on sell date" do
+      backstage_pass.sell_in = 0
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: -1, quality: 0)
+    end
+
+    it "after sell date" do
+      backstage_pass.sell_in = -10
+
+      update_quality(items)
+      expect(backstage_pass).to have_attributes(sell_in: -11, quality: 0)
+    end
+  end
+
   # context "with a single item" do
   #   let(:initial_sell_in) { 5 }
   #   let(:initial_quality) { 10 }

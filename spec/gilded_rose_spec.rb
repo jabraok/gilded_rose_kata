@@ -142,31 +142,34 @@ describe "#update_quality" do
     end
   end
 
-  # context "with a single item" do
-  #   let(:initial_sell_in) { 5 }
-  #   let(:initial_quality) { 10 }
-  #   let(:name) { "item" }
-  #   let(:item) { Item.new(name, initial_sell_in, initial_quality) }
+  context "Normal Item" do
+    let(:normal_item) { Item.new('Normal Item', 5, 10) }
+    let(:items) { [normal_item] }
 
-  #   before { update_quality([item]) }
+    it "before sell date" do
+      update_quality(items)
+      expect(normal_item).to have_attributes(sell_in: 4, quality: 9)
+    end
 
-  #   it "your specs here" do
-  #     pending
-  #   end
-  # end
+    it "on sell date" do
+      normal_item.sell_in = 0
 
-  # context "with multiple items" do
-  #   let(:items) {
-  #     [
-  #       Item.new("NORMAL ITEM", 5, 10),
-  #       Item.new("Aged Brie", 3, 10),
-  #     ]
-  #   }
+      update_quality(items)
+      expect(normal_item).to have_attributes(sell_in: -1, quality: 8)
+    end
 
-  #   before { update_quality(items) }
+    it "after sell date" do
+      normal_item.sell_in = -10
 
-  #   it "your specs here" do
-  #     pending
-  #   end
-  # end
+      update_quality(items)
+      expect(normal_item).to have_attributes(sell_in: -11, quality: 8)
+    end
+
+    it "of zero quality" do
+      normal_item.quality = 0
+
+      update_quality(items)
+      expect(normal_item).to have_attributes(sell_in: 4, quality: 0)
+    end
+  end
 end

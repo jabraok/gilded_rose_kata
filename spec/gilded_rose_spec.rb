@@ -172,4 +172,15 @@ describe "#update_quality" do
       expect(normal_item).to have_attributes(sell_in: 4, quality: 0)
     end
   end
+
+  context "with multiple items" do
+    let(:normal_item) { Item.new('Normal Item', 5, 10) }
+    let(:aged_brie) { Item.new('Aged Brie', 3, 10) }
+    let(:items) { [normal_item, aged_brie] }
+
+    before { update_quality(items) }
+
+    it { expect(normal_item).to have_attributes(sell_in: 4, quality: 9) }
+    it { expect(aged_brie).to have_attributes(sell_in: 2, quality: 11) }
+ end
 end

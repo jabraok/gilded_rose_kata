@@ -76,12 +76,15 @@ def update_sulfuras(item)
   SulfurasUpdater.update(item)
 end
 
+ITEM_UPDATERS = {
+  'Sulfuras, Hand of Ragnaros': SulfurasUpdater,
+  'Backstage passes to a TAFKAL80ETC concert': BackstageUpdater,
+  'Aged Brie': AgedBrieUpdater
+}.freeze
+
 def update_quality(items)
   items.each do |item|
-    return update_sulfuras(item) if item.name == 'Sulfuras, Hand of Ragnaros'
-    return update_backstage(item) if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-    return update_aged_brie(item) if item.name == 'Aged Brie'
-    update_normal_item(item)
+    (ITEM_UPDATERS[item.name.to_sym] || NormalUpdater).update(item)
   end
 end
 
